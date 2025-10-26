@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Equipment Control - Kiosk Mode</title>
+    <style>
+      /* Fullscreen kiosk mode styles */
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+      }
+
+      /* Prevent context menu */
+      body {
+        -webkit-touch-callout: none;
+      }
+
+      /* Loading screen */
+      #loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-family: Arial, sans-serif;
+        z-index: 9999;
+      }
+
+      #loading h1 {
+        font-size: 4rem;
+        margin-bottom: 2rem;
+      }
+
+      .spinner {
+        width: 80px;
+        height: 80px;
+        border: 8px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading">
+      <h1>EQUIPMENT CONTROL</h1>
+      <div class="spinner"></div>
+      <p style="margin-top: 2rem; font-size: 1.5rem;">Loading System...</p>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Hide loading screen when app is ready
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          document.getElementById('loading').style.display = 'none';
+        }, 1000);
+      });
+
+      // Prevent right-click context menu
+      document.addEventListener('contextmenu', e => e.preventDefault());
+
+      // Prevent text selection
+      document.addEventListener('selectstart', e => e.preventDefault());
+
+      // Disable F12, Ctrl+Shift+I, Ctrl+U (dev tools)
+      document.addEventListener('keydown', e => {
+        if (
+          e.key === 'F12' ||
+          (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+          (e.ctrlKey && e.key === 'u')
+        ) {
+          e.preventDefault();
+        }
+      });
+
+      // Request fullscreen on touch (for kiosk mode)
+      let fullscreenRequested = false;
+      document.addEventListener('touchstart', () => {
+        if (!fullscreenRequested && document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(() => {});
+          fullscreenRequested = true;
+        }
+      }, { once: true });
+    </script>
+  </body>
+</html>

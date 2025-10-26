@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: industrial-automation-ui
+  labels:
+    app: industrial-automation-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: industrial-automation-ui
+  template:
+    metadata:
+      labels:
+        app: industrial-automation-ui
+    spec:
+      containers:
+      - name: industrial-automation-ui
+        image: ghcr.io/altyrus/industrial-automation-ui:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: automation-config
+              key: api-url
+        - name: MQTT_WS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: automation-config
+              key: mqtt-ws-url
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: industrial-automation-ui
+  labels:
+    app: industrial-automation-ui
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: industrial-automation-ui
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: automation-config
+data:
+  # UPDATE THESE: Replace with your actual API and MQTT endpoints
+  # For API: Use the service name if in same cluster, or external URL
+  # For MQTT: Use WebSocket URL (ws:// or wss://)
+  api-url: "http://automation-api:8080"
+  mqtt-ws-url: "ws://mqtt-broker:9001"

@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 600;
+
+  color-scheme: light;
+  color: #1f2937;
+  background-color: #f3f4f6;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Disable text selection for kiosk mode */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  /* Disable tap highlight on mobile/touch devices */
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #f3f4f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Disable pull-to-refresh on touch devices */
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* Ensure touch targets are large enough */
+button,
+a,
+input {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Improve touch feedback */
+button:active,
+a:active {
+  opacity: 0.9;
+}
+
+/* Prevent accidental zoom on input focus */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+/* Hide scrollbars but keep functionality */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}

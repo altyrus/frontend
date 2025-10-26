@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - ingress.yaml
+
+# Namespace for all resources
+namespace: automation
+
+# Common labels applied to all resources
+commonLabels:
+  app.kubernetes.io/name: industrial-automation-ui
+  app.kubernetes.io/component: frontend
+  app.kubernetes.io/part-of: industrial-automation
+
+# Image configuration
+images:
+  - name: YOUR_REGISTRY/industrial-automation-ui
+    newName: YOUR_REGISTRY/industrial-automation-ui
+    newTag: latest
+
+# ConfigMap generator (alternative to editing deployment.yaml directly)
+# Uncomment and use this instead of the ConfigMap in deployment.yaml
+# configMapGenerator:
+#   - name: automation-config
+#     literals:
+#       - api-url=http://automation-api:8080
+#       - mqtt-ws-url=ws://mqtt-broker:9001

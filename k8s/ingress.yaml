@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: industrial-automation-ui
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # If using cert-manager for SSL certificates, uncomment below:
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+    # WebSocket support for MQTT
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/websocket-services: "industrial-automation-ui"
+spec:
+  ingressClassName: nginx  # Change if using different ingress controller
+
+  # TLS configuration - UPDATE THIS with your domain
+  tls:
+  - hosts:
+    - automation.example.com  # CHANGE THIS to your domain
+    secretName: automation-ui-tls
+
+  rules:
+  - host: automation.example.com  # CHANGE THIS to your domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: industrial-automation-ui
+            port:
+              number: 80

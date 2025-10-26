@@ -1,0 +1,102 @@
+# Harbor Helm Chart Values
+# This is a minimal production-ready configuration for Harbor
+
+expose:
+  type: ingress
+  tls:
+    enabled: true
+    certSource: auto  # Use 'secret' if you have your own cert
+  ingress:
+    hosts:
+      core: harbor.example.com  # CHANGE THIS to your domain
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+externalURL: https://harbor.example.com  # CHANGE THIS to your domain
+
+# Harbor admin password - CHANGE THIS!
+harborAdminPassword: "Harbor12345"
+
+# Persistence configuration
+persistence:
+  enabled: true
+  resourcePolicy: "keep"
+  persistentVolumeClaim:
+    registry:
+      storageClass: ""  # Use default storage class
+      size: 100Gi
+    chartmuseum:
+      storageClass: ""
+      size: 5Gi
+    jobservice:
+      storageClass: ""
+      size: 1Gi
+    database:
+      storageClass: ""
+      size: 5Gi
+    redis:
+      storageClass: ""
+      size: 1Gi
+    trivy:
+      storageClass: ""
+      size: 5Gi
+
+# Database - using internal PostgreSQL
+database:
+  type: internal
+  internal:
+    password: "changeit"  # CHANGE THIS
+
+# Redis
+redis:
+  type: internal
+
+# Disable components you don't need
+chartmuseum:
+  enabled: false  # Disable Helm chart repository
+
+trivy:
+  enabled: true  # Keep vulnerability scanning
+
+notary:
+  enabled: false  # Disable image signing (optional)
+
+# Resource limits
+portal:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+core:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 1000m
+
+registry:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+jobservice:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
