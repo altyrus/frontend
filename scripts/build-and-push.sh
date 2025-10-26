@@ -5,11 +5,16 @@
 
 set -e
 
+# Load environment variables from .env if it exists
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | xargs)
+fi
+
 # Configuration
-IMAGE_NAME="industrial-automation-ui"
-TAG="${1:-latest}"
-REGISTRY="${2:-localhost:5000}"  # Default to local registry, change to your registry
-FULL_IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
+IMAGE_NAME="${IMAGE_NAME:-industrial-automation-ui}"
+TAG="${1:-${IMAGE_TAG:-latest}}"
+REGISTRY="${2:-${REGISTRY:-localhost:5000}}"
+FULL_IMAGE="${REGISTRY}/${GITHUB_USERNAME:-username}/${IMAGE_NAME}:${TAG}"
 
 echo "================================"
 echo "Building Docker Image"

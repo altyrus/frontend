@@ -95,9 +95,17 @@ cp .env.example .env
 4. Update the `.env` file with your configuration:
 
 ```env
+# Application URLs
 VITE_API_URL=http://your-api-server:8080/api
 VITE_MQTT_BROKER_URL=ws://your-mqtt-broker:9001
+
+# GitHub Container Registry (if pushing images)
+GITHUB_USERNAME=your-github-username
+GITHUB_TOKEN=ghp_your_personal_access_token
 ```
+
+**⚠️ IMPORTANT:** Never commit the `.env` file to git! It contains sensitive credentials.
+See [ENV-SETUP.md](ENV-SETUP.md) for detailed environment variable configuration.
 
 ### Development
 
